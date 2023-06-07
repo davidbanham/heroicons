@@ -2,9 +2,9 @@ package heroicons
 
 import (
 	"fmt"
+	"html/template"
 	"io/fs"
 	"strings"
-	"text/template"
 )
 
 var pathMap = map[string]string{
@@ -14,17 +14,23 @@ var pathMap = map[string]string{
 }
 
 func Tmpl() (*template.Template, error) {
-	files := Files()
-
 	t := template.New("heroicons")
+
+	err := Extend(t)
+
+	return t, err
+}
+
+func Extend(t *template.Template) error {
+	files := Files()
 
 	for prefix, dir := range pathMap {
 		if err := slurp(files, dir, "heroicons/"+prefix, t); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
-	return t, nil
+	return nil
 }
 
 type Icons struct {
