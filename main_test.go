@@ -11,7 +11,7 @@ import (
 func TestTmpl(t *testing.T) {
 	tmpl, err := Tmpl()
 	assert.Nil(t, err)
-	assert.Nil(t, tmpl.ExecuteTemplate(os.Stdout, "heroicons/outline/arrow-right", nil))
+	assert.Nil(t, tmpl.ExecuteTemplate(os.Stdout, "outline/arrow-right", nil))
 }
 
 func TestExtend(t *testing.T) {

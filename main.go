@@ -16,21 +16,25 @@ var pathMap = map[string]string{
 func Tmpl() (*template.Template, error) {
 	t := template.New("heroicons")
 
-	err := Extend(t)
+	err := extend(t, "")
 
 	return t, err
 }
 
-func Extend(t *template.Template) error {
+func extend(t *template.Template, preface string) error {
 	files := Files()
 
 	for prefix, dir := range pathMap {
-		if err := slurp(files, dir, "heroicons/"+prefix, t); err != nil {
+		if err := slurp(files, dir, preface+prefix, t); err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+func Extend(t *template.Template) error {
+	return extend(t, "heroicons/")
 }
 
 type Icons struct {
