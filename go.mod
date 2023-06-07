@@ -1,4 +1,4 @@
-module heroicons
+module github.com/davidbanham/heroicons
 
 go 1.20
 
