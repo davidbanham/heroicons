@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
+	"regexp"
 	"strings"
 )
 
@@ -14,7 +15,8 @@ var pathMap = map[string]string{
 }
 
 type Options struct {
-	FixedColor bool
+	FixedColor      bool
+	FixedDimensions bool
 }
 
 func Tmpl(opts ...Options) (*template.Template, error) {
@@ -74,7 +76,7 @@ func (this *Icons) ByName(name string, opts ...Options) (string, error) {
 		return "", err
 	}
 
-	icon := applyOptions(string(d), opt)
+	icon := applyOptions(d, opt)
 
 	return icon, nil
 }
@@ -94,7 +96,7 @@ func slurp(files fs.FS, dir, prefix string, t *template.Template, opt Options) e
 		}
 		name := prefix + "/" + strings.ReplaceAll(file.Name(), ".svg", "")
 
-		data := applyOptions(string(b), opt)
+		data := applyOptions(b, opt)
 
 		tmpl := fmt.Sprintf(`{{define "%s"}}%s{{end}}`, name, data)
 		if _, err := t.New(name).Parse(tmpl); err != nil {
@@ -104,11 +106,26 @@ func slurp(files fs.FS, dir, prefix string, t *template.Template, opt Options) e
 	return nil
 }
 
-func applyOptions(icon string, opt Options) string {
+var dimensions = regexp.MustCompile(`((width|height)\="\d\d" ){2}`)
+var dimensionNumber = regexp.MustCompile(`\d\d`)
+
+var fixedColorCode = regexp.MustCompile(`#0F172A`)
+
+var dimensionReplacements = map[string][]byte{
+	"20": []byte(`class="w-5 h-5" `),
+	"24": []byte(`class="w-6 h-6" `),
+}
+
+func applyOptions(icon []byte, opt Options) string {
 	if !opt.FixedColor {
-		icon = strings.ReplaceAll(icon, "#0F172A", "currentColor")
+		icon = fixedColorCode.ReplaceAll(icon, []byte("currentColor"))
 	}
-	return icon
+	if !opt.FixedDimensions {
+		dimension := dimensionNumber.Find(dimensions.Find(icon))
+		classes := dimensionReplacements[string(dimension)]
+		icon = dimensions.ReplaceAll(icon, classes)
+	}
+	return string(icon)
 }
 
 func Files() fs.FS {
