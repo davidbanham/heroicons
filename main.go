@@ -13,19 +13,28 @@ var pathMap = map[string]string{
 	"mini":    "upstream/src/20/solid",
 }
 
-func Tmpl() (*template.Template, error) {
+type Options struct {
+	FixedColor bool
+}
+
+func Tmpl(opts ...Options) (*template.Template, error) {
 	t := template.New("heroicons")
 
-	err := extend(t, "")
+	opt := Options{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
+	err := extend(t, "", opt)
 
 	return t, err
 }
 
-func extend(t *template.Template, preface string) error {
+func extend(t *template.Template, preface string, opt Options) error {
 	files := Files()
 
 	for prefix, dir := range pathMap {
-		if err := slurp(files, dir, preface+prefix, t); err != nil {
+		if err := slurp(files, dir, preface+prefix, t, opt); err != nil {
 			return err
 		}
 	}
@@ -33,17 +42,26 @@ func extend(t *template.Template, preface string) error {
 	return nil
 }
 
-func Extend(t *template.Template) error {
-	return extend(t, "heroicons/")
+func Extend(t *template.Template, opts ...Options) error {
+	opt := Options{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+	return extend(t, "heroicons/", opt)
 }
 
 type Icons struct {
 	cache fs.FS
 }
 
-func (this *Icons) ByName(name string) (string, error) {
+func (this *Icons) ByName(name string, opts ...Options) (string, error) {
 	if this.cache == nil {
 		this.cache = Files()
+	}
+
+	opt := Options{}
+	if len(opts) > 0 {
+		opt = opts[0]
 	}
 
 	parts := strings.Split(name, "/")
@@ -55,10 +73,13 @@ func (this *Icons) ByName(name string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(d), nil
+
+	icon := applyOptions(string(d), opt)
+
+	return icon, nil
 }
 
-func slurp(files fs.FS, dir, prefix string, t *template.Template) error {
+func slurp(files fs.FS, dir, prefix string, t *template.Template, opt Options) error {
 	icons, err := fs.ReadDir(files, dir)
 	if err != nil {
 		return err
@@ -67,17 +88,27 @@ func slurp(files fs.FS, dir, prefix string, t *template.Template) error {
 		if file.IsDir() {
 			continue
 		}
-		d, err := fs.ReadFile(files, dir+"/"+file.Name())
+		b, err := fs.ReadFile(files, dir+"/"+file.Name())
 		if err != nil {
 			return err
 		}
 		name := prefix + "/" + strings.ReplaceAll(file.Name(), ".svg", "")
-		tmpl := fmt.Sprintf(`{{define "%s"}}%s{{end}}`, name, string(d))
+
+		data := applyOptions(string(b), opt)
+
+		tmpl := fmt.Sprintf(`{{define "%s"}}%s{{end}}`, name, data)
 		if _, err := t.New(name).Parse(tmpl); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func applyOptions(icon string, opt Options) string {
+	if !opt.FixedColor {
+		icon = strings.ReplaceAll(icon, "#0F172A", "currentColor")
+	}
+	return icon
 }
 
 func Files() fs.FS {
