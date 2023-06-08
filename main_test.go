@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"testing"
 
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,6 +16,13 @@ func TestTmpl(t *testing.T) {
 	buf := bytes.Buffer{}
 	assert.Nil(t, tmpl.ExecuteTemplate(&buf, "outline/arrow-right", nil))
 	t.Log(buf.String())
+
+	uniq := uuid.NewV4().String()
+
+	assert.Nil(t, tmpl.ExecuteTemplate(&buf, "outline/arrow-right", map[string]string{
+		"Classes": uniq,
+	}))
+	assert.Contains(t, buf.String(), ` class="`+uniq+`" `)
 }
 
 func TestExtend(t *testing.T) {

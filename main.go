@@ -99,6 +99,7 @@ func slurp(files fs.FS, dir, prefix string, t *template.Template, opt Options) e
 		data := applyOptions(b, opt)
 
 		tmpl := fmt.Sprintf(`{{define "%s"}}%s{{end}}`, name, data)
+		tmpl = class.ReplaceAllString(tmpl, `{{if .Classes}}{{.Classes}}{{else}}$1{{end}}`)
 		if _, err := t.New(name).Parse(tmpl); err != nil {
 			return err
 		}
@@ -110,6 +111,8 @@ var dimensions = regexp.MustCompile(`((width|height)\="\d\d" ){2}`)
 var dimensionNumber = regexp.MustCompile(`\d\d`)
 
 var fixedColorCode = regexp.MustCompile(`#0F172A`)
+
+var class = regexp.MustCompile(`(w-\d h-\d){1}`)
 
 var dimensionReplacements = map[string][]byte{
 	"20": []byte(`class="w-5 h-5" `),
