@@ -110,7 +110,7 @@ func slurp(files fs.FS, dir, prefix string, t *template.Template, opt Options) e
 var dimensions = regexp.MustCompile(`((width|height)\="\d\d" ){2}`)
 var dimensionNumber = regexp.MustCompile(`\d\d`)
 
-var fixedColorCode = regexp.MustCompile(`#0F172A`)
+var fixedColorCode = regexp.MustCompile(`#0F172A|black`)
 
 var class = regexp.MustCompile(`(w-\d h-\d){1}`)
 
