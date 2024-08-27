@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Nothing yet!
 
+## [2.1.5] - 2024-07-10
+
+### Added
+
+- Add new icons (`arrow-turn-*`, `bold`, `calendar-date-range`, `divide`, `document-currency-*`, `equals`, `h1`, `h2`, `h3`, `italic`, `link-slash`, `numbered-list`, `percent-badge`, `slash`, `strikethrough`, `underline`)
+
+## [2.1.4] - 2024-06-17
+
+### Fixed
+
+- Improve tree-shakability of React package ([#1192](https://github.com/tailwindlabs/heroicons/pull/1192))
+
+## [2.1.3] - 2024-03-22
+
+- Improve project READMEs ([#1152](https://github.com/tailwindlabs/heroicons/pull/1152))
+
+## [2.1.2] - 2024-03-22
+
+- Include license file with published packages ([#1151](https://github.com/tailwindlabs/heroicons/pull/1151))
+
+## [2.1.1] - 2023-12-18
+
+### Fixed
+
+- Fixed chevrons in mini set ([#1106](https://github.com/tailwindlabs/heroicons/pull/1106))
+
+## [2.1.0] - 2023-12-18
+
+### Added
+
+- Added micro icon set ([#1104](https://github.com/tailwindlabs/heroicons/pull/1104))
+- Rebuilt some icons for better clarity ([#1104](https://github.com/tailwindlabs/heroicons/pull/1104))
+
 ## [2.0.18] - 2023-05-09
 
 ### Fixed
@@ -224,7 +257,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Everything!
 
-[unreleased]: https://github.com/tailwindlabs/heroicons/compare/v2.0.18...HEAD
+[unreleased]: https://github.com/tailwindlabs/heroicons/compare/v2.1.5...HEAD
+[2.1.5]: https://github.com/tailwindlabs/heroicons/compare/v2.1.4...v2.1.5
+[2.1.4]: https://github.com/tailwindlabs/heroicons/compare/v2.1.3...v2.1.4
+[2.1.3]: https://github.com/tailwindlabs/heroicons/compare/v2.1.2...v2.1.3
+[2.1.2]: https://github.com/tailwindlabs/heroicons/compare/v2.1.1...v2.1.2
+[2.1.1]: https://github.com/tailwindlabs/heroicons/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/tailwindlabs/heroicons/compare/v2.0.18...v2.1.0
 [2.0.18]: https://github.com/tailwindlabs/heroicons/compare/v2.0.17...v2.0.18
 [2.0.17]: https://github.com/tailwindlabs/heroicons/compare/v2.0.16...v2.0.17
 [2.0.16]: https://github.com/tailwindlabs/heroicons/compare/v2.0.15...v2.0.16
